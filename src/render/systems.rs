@@ -19,7 +19,8 @@ use bevy_render::{
     render_asset::RenderAssets,
     render_resource::{
         BindGroup, BindGroupEntry, BindingResource, Buffer, BufferDescriptor, BufferId,
-        CachedRenderPipelineId, DynamicUniformBuffer, PipelineCache, SpecializedRenderPipelines,
+        CachedRenderPipelineId, DynamicUniformBuffer, PipelineCache, ShaderType,
+        SpecializedRenderPipelines,
     },
     renderer::{RenderDevice, RenderQueue},
     sync_world::{MainEntity, RenderEntity},
@@ -97,7 +98,7 @@ pub struct EguiTransforms {
 
 /// Scale and translation for rendering Egui shapes. Is needed to transform Egui coordinates from
 /// the screen space with the center at (0, 0) to the normalised viewport space.
-#[derive(encase::ShaderType, Default)]
+#[derive(ShaderType, Default)]
 pub struct EguiTransform {
     /// Is affected by render target size, scale factor and [`EguiContextSettings::scale_factor`].
     pub scale: Vec2,
