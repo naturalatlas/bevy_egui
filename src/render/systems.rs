@@ -211,7 +211,7 @@ pub fn queue_bind_groups_system(
 
             let bind_group = render_device.create_bind_group(
                 None,
-                &pipeline_cache.get_bind_group_layout(&egui_pipeline.texture_bind_group_layout),
+                pipeline_cache.get_bind_group_layout(&egui_pipeline.texture_bind_group_layout),
                 &[
                     BindGroupEntry {
                         binding: 0,
@@ -237,7 +237,7 @@ pub fn queue_bind_groups_system(
             .map(|(texture, gpu_image)| {
                 let bind_group = render_device.create_bind_group(
                     None,
-                    &pipeline_cache.get_bind_group_layout(&egui_pipeline.texture_bind_group_layout),
+                    pipeline_cache.get_bind_group_layout(&egui_pipeline.texture_bind_group_layout),
                     &[
                         BindGroupEntry {
                             binding: 0,
