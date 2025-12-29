@@ -112,7 +112,12 @@ impl Node for RunEguiSubgraphOnEguiViewNode {
         };
 
         // Run the subgraph on the Egui view.
-        graph.run_sub_graph(SubGraphEgui, vec![], Some(default_camera_view.0))?;
+        graph.run_sub_graph(
+            SubGraphEgui,
+            vec![],
+            Some(default_camera_view.0),
+            Some("egui".to_string()),
+        )?;
         Ok(())
     }
 }
@@ -184,6 +189,7 @@ pub fn extract_egui_camera_view_system(
                             physical_viewport_rect.size(),
                         )),
                         color_grading: Default::default(),
+                        invert_culling: false,
                     },
                     // Link to the main camera view.
                     EguiViewTarget(render_entity),
