@@ -56,7 +56,7 @@ use std::num::NonZero;
 use systems::{EguiTextureId, EguiTransform};
 use wgpu_types::{
     BlendState, ColorTargetState, ColorWrites, Extent3d, MultisampleState, PrimitiveState,
-    PushConstantRange, SamplerBindingType, ShaderStages, TextureDimension, TextureFormat,
+    SamplerBindingType, ShaderStages, TextureDimension, TextureFormat,
     TextureSampleType, VertexFormat, VertexStepMode,
 };
 
@@ -246,7 +246,7 @@ impl FromWorld for EguiPipeline {
         // max_binding_array_sampler_elements-per_shader_stage
         // to be sure that device support provided limits
         let bindless = if features.contains(wgpu_types::Features::TEXTURE_BINDING_ARRAY)
-            && features.contains(wgpu_types::Features::PUSH_CONSTANTS)
+            && features.contains(wgpu_types::Features::IMMEDIATES)
         {
             settings.bindless_mode_array_size
         } else {
@@ -305,14 +305,11 @@ impl SpecializedRenderPipeline for EguiPipeline {
 
     fn specialize(&self, key: Self::Key) -> RenderPipelineDescriptor {
         let mut shader_defs = Vec::new();
-        let mut push_constant_ranges = Vec::new();
+        let mut immediate_size = 0;
 
         if let Some(bindless) = self.bindless {
             shader_defs.push(ShaderDefVal::UInt("BINDLESS".into(), u32::from(bindless)));
-            push_constant_ranges.push(PushConstantRange {
-                stages: ShaderStages::FRAGMENT,
-                range: 0..4,
-            });
+            immediate_size = 4;
         }
 
         RenderPipelineDescriptor {
@@ -351,7 +348,7 @@ impl SpecializedRenderPipeline for EguiPipeline {
             primitive: PrimitiveState::default(),
             depth_stencil: None,
             multisample: MultisampleState::default(),
-            push_constant_ranges,
+            immediate_size,
             zero_initialize_workgroup_memory: false,
         }
     }

@@ -16,7 +16,7 @@ use bevy_render::{
     sync_world::RenderEntity,
     view::{ExtractedView, ViewTarget},
 };
-use wgpu_types::{IndexFormat, ShaderStages};
+use wgpu_types::IndexFormat;
 
 /// Egui pass node.
 pub struct EguiPassNode {
@@ -97,6 +97,7 @@ impl Node for EguiPassNode {
             depth_stencil_attachment: None,
             timestamp_writes: None,
             occlusion_query_set: None,
+            multiview_mask: None,
         });
         let Some(viewport) = camera.viewport.clone().or_else(|| {
             camera.physical_viewport_size.map(|size| Viewport {
@@ -216,11 +217,7 @@ impl Node for EguiPassNode {
                             // Use push constant to cheaply provide which texture to use inside
                             // binding array. This is used to avoid costly set_bind_group operations
                             // when frequent switching between textures is being done
-                            render_pass.set_push_constants(
-                                ShaderStages::FRAGMENT,
-                                0,
-                                bytemuck::bytes_of(bindless_offset),
-                            );
+                            render_pass.set_immediates(0, bytemuck::bytes_of(bindless_offset));
                         }
                     }
 
