@@ -1,3 +1,7 @@
+#ifdef BINDLESS
+enable wgpu_binding_array;
+#endif // BINDLESS
+
 struct Transform {
     scale: vec2<f32>,
     translation: vec2<f32>,
@@ -20,7 +24,7 @@ struct VertexOutput {
 #ifdef BINDLESS
 @group(1) @binding(0) var image_texture: binding_array<texture_2d<f32>>;
 @group(1) @binding(1) var image_sampler: binding_array<sampler>;
-var<push_constant> offset: u32;
+var<immediate> offset: u32;
 
 #else //BINDLESS
 @group(1) @binding(0) var image_texture: texture_2d<f32>;
